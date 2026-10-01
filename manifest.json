@@ -2,7 +2,7 @@
   "name": "IPadMode",
   "version": "0.1.2",
   "author": "dcqwqc",
-  "homepage": "https://github.com/dcqwqc/caelestia-plugin-ipad-mode",
+  "homepage": "https://github.com/dcqwqc/CaelestiaPlugin-IPadMode",
   "icon": "tablet_mac",
   "description": "A headless Hyprland display streamed to an iPad through Weylus and Tailscale, with Extend and Duplicate modes.",
   "entryPoints": [

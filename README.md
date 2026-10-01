@@ -33,7 +33,7 @@ refresh rate, scale, placement, Sumi auto-launch, and disconnect behavior.
 
 Clone into Caelestia's plugin directory:
 
-    git clone https://github.com/dcqwqc/caelestia-plugin-ipad-mode ~/.local/share/caelestia/plugins/ipad-mode
+    git clone https://github.com/dcqwqc/CaelestiaPlugin-IPadMode ~/.local/share/caelestia/plugins/ipad-mode
 
 Then enable `dcqwqc/ipadmode` in Nexus → Plugins and add `ipadMode` to the
 utilities quick-toggle list.
