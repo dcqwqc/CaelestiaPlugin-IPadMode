@@ -8,7 +8,7 @@ import Caelestia
 Singleton {
     id: root
 
-    readonly property string bin: `${Quickshell.env("HOME")}/.local/bin/ipad-mode`
+    readonly property string bin: `${Quickshell.env("HOME")}/.local/share/caelestia/plugins/ipad-mode/scripts/ipad-mode`
 
     property bool available: false
     property bool active: false
