@@ -4,8 +4,8 @@ import qs.components
 import qs.services
 import dcqwqc.ipadmode.services as IPad
 
-// One native-sized quick-toggle surface. When the companion display is active the surface
-// gains two clipped hit zones: power on the left and display mode on the right.
+// Native-sized quick toggle. When active it becomes two distinct rounded
+// segments: large exterior corners, small adjoining corners.
 StyledRect {
     id: root
 
@@ -19,16 +19,50 @@ StyledRect {
     enabled: !IPad.IPadMode.busy
 
     readonly property bool split: IPad.IPadMode.active
-    readonly property real powerWidth: split ? Math.round(width / 2) : width
-    readonly property color activeColour: Colours.palette.m3primary
-    readonly property color activeOnColour: Colours.palette.m3onPrimary
+    readonly property real outerRadius: split
+        ? Math.min(height / 2, Tokens.rounding.large)
+        : Math.min(width, height) / 2 * Math.min(1, Tokens.rounding.scale)
+    readonly property real innerRadius: Math.min(outerRadius, Tokens.rounding.extraSmall)
+    readonly property real segmentGap: split ? Math.max(2, Math.round(Tokens.spacing.extraSmall / 2)) : 0
+    readonly property real powerWidth: split ? Math.floor((width - segmentGap) / 2) : width
+
+    readonly property color selectedColour: Colours.palette.m3onSurface
+    readonly property color selectedOnColour: Colours.palette.m3surface
     readonly property color inactiveColour: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
     readonly property color inactiveOnColour: Colours.palette.m3onSurfaceVariant
 
-    radius: split || powerLayer.pressed || modeLayer.pressed
-        ? Tokens.rounding.medium
-        : Math.min(width, height) / 2 * Math.min(1, Tokens.rounding.scale)
-    color: split ? activeColour : inactiveColour
+    radius: outerRadius
+    color: "transparent"
+
+    StyledRect {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: root.powerWidth
+        radius: 0
+        topLeftRadius: root.outerRadius
+        bottomLeftRadius: root.outerRadius
+        topRightRadius: root.split ? root.innerRadius : root.outerRadius
+        bottomRightRadius: root.split ? root.innerRadius : root.outerRadius
+        color: root.split ? root.selectedColour : root.inactiveColour
+
+        Behavior on color { CAnim {} }
+    }
+
+    StyledRect {
+        visible: root.split
+        anchors.left: powerAction.right
+        anchors.leftMargin: root.segmentGap
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        radius: 0
+        topLeftRadius: root.innerRadius
+        bottomLeftRadius: root.innerRadius
+        topRightRadius: root.outerRadius
+        bottomRightRadius: root.outerRadius
+        color: root.selectedColour
+    }
 
     Item {
         id: powerAction
@@ -40,23 +74,21 @@ StyledRect {
 
         StateLayer {
             id: powerLayer
-
-            color: root.split ? root.activeOnColour : root.inactiveOnColour
+            color: root.split ? root.selectedOnColour : root.inactiveOnColour
             disabled: !root.enabled
-            rect.topLeftRadius: root.radius
-            rect.bottomLeftRadius: root.radius
-            rect.topRightRadius: root.split ? 0 : root.radius
-            rect.bottomRightRadius: root.split ? 0 : root.radius
+            rect.topLeftRadius: root.outerRadius
+            rect.bottomLeftRadius: root.outerRadius
+            rect.topRightRadius: root.split ? root.innerRadius : root.outerRadius
+            rect.bottomRightRadius: root.split ? root.innerRadius : root.outerRadius
             onClicked: IPad.IPadMode.togglePower()
         }
 
         MaterialIcon {
             id: powerIcon
-
             anchors.centerIn: parent
             anchors.verticalCenterOffset: 1
             text: root.split ? "power_settings_new" : "tablet_mac"
-            color: root.split ? root.activeOnColour : root.inactiveOnColour
+            color: root.split ? root.selectedOnColour : root.inactiveOnColour
             fill: root.split ? 1 : 0
             fontStyle: Tokens.font.icon.medium
         }
@@ -67,17 +99,19 @@ StyledRect {
 
         visible: root.split
         anchors.left: powerAction.right
+        anchors.leftMargin: root.segmentGap
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
         StateLayer {
             id: modeLayer
-
-            color: root.activeOnColour
+            color: root.selectedOnColour
             disabled: !root.enabled
-            rect.topRightRadius: root.radius
-            rect.bottomRightRadius: root.radius
+            rect.topLeftRadius: root.innerRadius
+            rect.bottomLeftRadius: root.innerRadius
+            rect.topRightRadius: root.outerRadius
+            rect.bottomRightRadius: root.outerRadius
             onClicked: IPad.IPadMode.toggleMode()
         }
 
@@ -85,23 +119,11 @@ StyledRect {
             anchors.centerIn: parent
             anchors.verticalCenterOffset: 1
             text: IPad.IPadMode.mode === "duplicate" ? "content_copy" : "desktop_windows"
-            color: root.activeOnColour
+            color: root.selectedOnColour
             fill: 1
             fontStyle: Tokens.font.icon.medium
         }
     }
-
-    Rectangle {
-        visible: root.split
-        anchors.left: powerAction.right
-        anchors.verticalCenter: parent.verticalCenter
-        width: 1
-        height: Math.round(parent.height * 0.42)
-        color: root.activeOnColour
-        opacity: 0.32
-    }
-
-    Behavior on radius { Anim { type: Anim.FastSpatial } }
 
     onVisibleChanged: if (visible)
         IPad.IPadMode.refresh()
