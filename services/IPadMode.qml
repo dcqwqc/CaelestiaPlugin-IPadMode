@@ -74,11 +74,11 @@ Singleton {
             root.pendingAction = "";
             if (code !== 0) {
                 const detail = actionError.text.trim().replace(/^ipad-mode:\s*/, "");
-                Toaster.toast(qsTr("iPad Mode failed"), detail || qsTr("The display could not be changed"), "error");
+                Toaster.toast(qsTr("Companion display failed"), detail || qsTr("The display could not be changed"), "error");
             } else if (label === "on") {
-                Toaster.toast(qsTr("iPad Mode on"), qsTr("Weylus is ready on the virtual display"));
+                Toaster.toast(qsTr("Companion display on"), qsTr("Weylus is ready on the virtual display"));
             } else if (label === "off") {
-                Toaster.toast(qsTr("iPad Mode off"), qsTr("Display layout kept in place"));
+                Toaster.toast(qsTr("Companion display off"), qsTr("Display layout kept in place"));
             }
             root.refresh();
         }

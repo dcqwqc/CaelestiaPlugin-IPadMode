@@ -13,8 +13,8 @@ SettingsObject {
 
     property string resolution: "1920x1080"
     SettingMeta on resolution {
-        label: "iPad resolution"
-        description: "Lower resolutions reduce latency; 4:3 modes use more of an iPad panel."
+        label: "Client resolution"
+        description: "Lower resolutions reduce latency; choose an aspect ratio that fits the receiving display."
         icon: "aspect_ratio"
         inputType: SettingMeta.SplitButton
         options: ["1920x1080", "1600x1200", "1920x1440", "2160x1620"]
@@ -45,24 +45,16 @@ SettingsObject {
     property string position: "right"
     SettingMeta on position {
         label: "Extended-display position"
-        description: "Where the iPad sits relative to the laptop display."
+        description: "Where the remote display sits relative to the primary display."
         icon: "open_in_new"
         inputType: SettingMeta.SplitButton
         options: ["right", "left", "above", "below", "auto"]
     }
 
-    property bool autoLaunchSumi: false
-    SettingMeta on autoLaunchSumi {
-        label: "Open Sumi on connect"
-        description: "Launches or moves Sumi to a dedicated iPad workspace in Extend mode."
-        icon: "draw"
-        inputType: SettingMeta.Switch
-    }
-
     property bool stopWeylusOnDisconnect: true
     SettingMeta on stopWeylusOnDisconnect {
         label: "Stop Weylus on disconnect"
-        description: "Leaves no streaming process running after iPad Mode is switched off."
+        description: "Leaves no streaming process running after the companion display is switched off."
         icon: "power_settings_new"
         inputType: SettingMeta.Switch
     }

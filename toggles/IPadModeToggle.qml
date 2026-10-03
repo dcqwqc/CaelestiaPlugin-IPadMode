@@ -4,7 +4,7 @@ import qs.components
 import qs.services
 import dcqwqc.ipadmode.services as IPad
 
-// One native-sized quick-toggle surface. When iPad Mode is active the surface
+// One native-sized quick-toggle surface. When the companion display is active the surface
 // gains two clipped hit zones: power on the left and display mode on the right.
 StyledRect {
     id: root
