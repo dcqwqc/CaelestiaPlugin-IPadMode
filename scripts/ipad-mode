@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Idempotent Hyprland/Weylus controller used by the iPad Mode plugin."""
+"""Idempotent Hyprland/Weylus controller for a streamed companion display."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 
 
-APP = "iPad Mode"
+APP = "Companion Display"
 OUTPUT = "IPAD"
 
 
@@ -46,7 +46,6 @@ DEFAULTS = {
     "refreshRate": 60,
     "scale": 1.0,
     "position": "right",
-    "autoLaunchSumi": False,
     "stopWeylusOnDisconnect": True,
 }
 
@@ -436,6 +435,8 @@ def turn_on(mode: str | None = None) -> str:
     configure_output(requested, values)
     ensure_weylus()
     save_state(mode=requested, enabled=True)
+    # Backward compatibility only: older installations may still carry the
+    # historical Sumi-specific flag. Fresh plugin settings do not create it.
     if values.get("autoLaunchSumi") and requested == "extend":
         place_sumi()
     return requested
@@ -499,36 +500,36 @@ def main() -> int:
             if args.command == "toggle":
                 if status().get("active"):
                     turn_off()
-                    message = ("iPad Mode off", "Display layout kept in place")
+                    message = ("Companion display off", "Display layout kept in place")
                 else:
                     active_mode = turn_on()
-                    message = ("iPad Mode on", active_mode.capitalize())
+                    message = ("Companion display on", active_mode.capitalize())
             elif args.command == "on":
                 active_mode = turn_on(args.mode)
-                message = ("iPad Mode on", active_mode.capitalize())
+                message = ("Companion display on", active_mode.capitalize())
             elif args.command == "off":
                 turn_off()
-                message = ("iPad Mode off", "Display layout kept in place")
+                message = ("Companion display off", "Display layout kept in place")
             elif args.command == "remove":
                 remove_output()
-                message = ("iPad display removed", "Workspaces returned to the laptop")
+                message = ("Companion display removed", "Workspaces returned to the primary display")
             elif args.command == "mode":
                 set_mode(args.mode)
-                message = ("iPad display mode", args.mode.capitalize())
+                message = ("Companion display mode", args.mode.capitalize())
             elif args.command == "move-active":
                 if not status().get("active"):
-                    raise IpadModeError("iPad Mode is not active")
+                    raise IpadModeError("Companion display is not active")
                 if mode_from_system() != "extend":
-                    raise IpadModeError("Windows can only move to the iPad in Extend mode")
+                    raise IpadModeError("Windows can only move to the companion display in Extend mode")
                 hypr_eval(
                     "hl.dispatch(hl.dsp.window.move({ "
                     f"monitor = {json.dumps(OUTPUT)}"
                     " }))"
                 )
-                message = ("Window moved", "IPAD")
+                message = ("Window moved", "Companion display")
             else:
                 if not status().get("active") or mode_from_system() != "extend":
-                    raise IpadModeError("Enable iPad Mode in Extend mode first")
+                    raise IpadModeError("Enable the companion display in Extend mode first")
                 place_sumi()
                 message = ("Sumi ready", "Moved to IPAD")
             if not args.quiet:
@@ -536,7 +537,7 @@ def main() -> int:
             return 0
         except (IpadModeError, OSError) as exc:
             if not args.quiet:
-                notify("iPad Mode failed", str(exc), "critical")
+                notify("Companion display failed", str(exc), "critical")
             print(f"ipad-mode: {exc}", file=sys.stderr)
             return 1
 
