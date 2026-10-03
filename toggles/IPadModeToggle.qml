@@ -22,7 +22,7 @@ StyledRect {
     readonly property real outerRadius: split
         ? Math.min(height / 2, Tokens.rounding.large)
         : Math.min(width, height) / 2 * Math.min(1, Tokens.rounding.scale)
-    readonly property real innerRadius: Math.min(outerRadius, Tokens.rounding.extraSmall)
+    readonly property real innerRadius: Math.min(outerRadius, Tokens.rounding.small)
     readonly property real segmentGap: split ? Math.max(2, Math.round(Tokens.spacing.extraSmall / 2)) : 0
     readonly property real powerWidth: split ? Math.floor((width - segmentGap) / 2) : width
 
@@ -89,8 +89,8 @@ StyledRect {
             anchors.verticalCenterOffset: 1
             text: root.split ? "power_settings_new" : "tablet_mac"
             color: root.split ? root.selectedOnColour : root.inactiveOnColour
-            fill: root.split ? 1 : 0
-            fontStyle: Tokens.font.icon.medium
+            fill: 0
+            fontStyle: root.split ? Tokens.font.icon.small : Tokens.font.icon.medium
         }
     }
 
