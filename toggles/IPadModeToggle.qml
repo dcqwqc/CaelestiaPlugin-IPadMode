@@ -26,8 +26,8 @@ StyledRect {
     readonly property real segmentGap: split ? Math.max(2, Math.round(Tokens.spacing.extraSmall / 2)) : 0
     readonly property real powerWidth: split ? Math.floor((width - segmentGap) / 2) : width
 
-    readonly property color selectedColour: Colours.palette.m3onSurface
-    readonly property color selectedOnColour: Colours.palette.m3surface
+    readonly property color selectedColour: Colours.palette.m3primary
+    readonly property color selectedOnColour: Colours.palette.m3onPrimary
     readonly property color inactiveColour: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
     readonly property color inactiveOnColour: Colours.palette.m3onSurfaceVariant
 
