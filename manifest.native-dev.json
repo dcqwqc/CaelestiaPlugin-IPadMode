@@ -1,0 +1,19 @@
+{
+  "name": "IPadMode",
+  "version": "0.1.2",
+  "author": "dcqwqc",
+  "homepage": "https://github.com/dcqwqc/CaelestiaPlugin-IPadMode",
+  "icon": "tablet_mac",
+  "description": "Stream a virtual Hyprland display to a tablet or browser client through Weylus, with Extend and Duplicate modes.",
+  "entryPoints": [
+    {
+      "type": "quick-toggle",
+      "source": "toggles/IPadModeToggle.qml",
+      "properties": {
+        "name": "ipadMode"
+      }
+    }
+  ],
+  "settings": "Settings.qml",
+  "requires": ">=2.1.0"
+}
